@@ -13,7 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(  
       debugShowCheckedModeBanner: false,
       title: 'SafeSteps+',
-      theme: ThemeData(primarySwatch: Colors.deepOrange),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(177, 156, 215, 1.0)),
+        useMaterial3: true,
+      ),
       home: HomePage(),
     );
   }
