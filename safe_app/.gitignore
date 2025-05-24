@@ -45,7 +45,6 @@ app.*.map.json
 /android/app/release
 
 # Unused platforms
-/ios/
 /linux/
 /macOS/
 /windows/
