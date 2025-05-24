@@ -5,6 +5,7 @@ import '../widgets/map_widget.dart';
 import '../widgets/route_summary_dialog.dart';
 import '../widgets/json_data_dialog.dart';
 import '../widgets/ml_result_dialog.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   final RouteController _routeController = RouteController();
   final TextEditingController _startController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -57,14 +59,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildCurrentPage() {
+    switch (_currentIndex) {
+      case 0:
+        return _buildMapsPage();
+      case 1:
+        return const Center(child: Text('Chatbot Coming Soon'));
+      case 2:
+        return const Center(child: Text('Resources Coming Soon'));
+      case 3:
+        return const Center(child: Text('Profile Coming Soon'));
+      default:
+        return _buildMapsPage();
+    }
+  }
+
+  Widget _buildMapsPage() {
+    return Column(
+      children: [
+        ListenableBuilder(
+          listenable: _routeController,
+          builder: (context, child) {
+            return RouteInputSection(
+              startController: _startController,
+              destinationController: _destinationController,
+              onSearchRoutes: _searchRoutes,
+              onMLProcess: _routeController.allRoutesData.isNotEmpty ? _processWithML : null,
+              isProcessingML: _routeController.isProcessingML,
+              routeCount: _routeController.allRoutesData.length,
+              hasMLSelection: _routeController.mlSelectedRoute != null,
+            );
+          },
+        ),
+        Expanded(
+          child: MapWidget(controller: _routeController),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SafeSteps+'),
-        backgroundColor: Color.fromRGBO(198, 142, 253, 1.0),
-        foregroundColor: Colors.white,
+        title: const Text('SafeSteps'),
+        backgroundColor: const Color.fromRGBO(198, 142, 253, 1.0),
+        foregroundColor: Colors.black,
         actions: [
           ListenableBuilder(
             listenable: _routeController,
@@ -95,26 +135,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          ListenableBuilder(
-            listenable: _routeController,
-            builder: (context, child) {
-              return RouteInputSection(
-                startController: _startController,
-                destinationController: _destinationController,
-                onSearchRoutes: _searchRoutes,
-                onMLProcess: _routeController.allRoutesData.isNotEmpty ? _processWithML : null,
-                isProcessingML: _routeController.isProcessingML,
-                routeCount: _routeController.allRoutesData.length,
-                hasMLSelection: _routeController.mlSelectedRoute != null,
-              );
-            },
-          ),
-          Expanded(
-            child: MapWidget(controller: _routeController),
-          ),
-        ],
+      body: _buildCurrentPage(),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
   }
