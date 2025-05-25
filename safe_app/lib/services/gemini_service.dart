@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class GeminiService {
   final String apiKey;
   static const String baseUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
   GeminiService({required this.apiKey}) {
     if (apiKey.isEmpty) {
@@ -29,6 +29,30 @@ class GeminiService {
               'parts': [
                 {'text': prompt},
               ],
+            },
+          ],
+          'generationConfig': {
+            'temperature': 0.7,
+            'topK': 40,
+            'topP': 0.95,
+            'maxOutputTokens': 1024,
+          },
+          'safetySettings': [
+            {
+              'category': 'HARM_CATEGORY_HARASSMENT',
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
+            },
+            {
+              'category': 'HARM_CATEGORY_HATE_SPEECH',
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
+            },
+            {
+              'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
+            },
+            {
+              'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
             },
           ],
         }),
@@ -65,6 +89,9 @@ class GeminiService {
           '❌ API 403 Error: Forbidden - API key may not have proper permissions',
         );
         return 'Error: API key does not have proper permissions.';
+      } else if (response.statusCode == 404) {
+        print('❌ API 404 Error: Model or endpoint not found');
+        return 'Error: The AI model is not available. Please try again later.';
       } else if (response.statusCode == 429) {
         print('❌ API 429 Error: Too Many Requests - Rate limit exceeded');
         return 'Error: Rate limit exceeded. Please try again later.';
