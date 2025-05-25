@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
 import 'dart:convert';
+import '../pages/api_test_screen.dart'; // Adjust path as needed
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -261,12 +262,13 @@ class _HomePageState extends State<HomePage> {
                   tooltip: 'View Routes Summary',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.code),
-                  onPressed: () => JsonDataDialog.show(
-                    context,
-                    _routeController.allRoutesData,
-                    _routeController.mlSelectedRoute,
-                  ),
+                  icon: Icon(Icons.bug_report),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => APIConnectionTest()),
+                    );
+                  },
                   tooltip: 'View JSON Data',
                 ),
               ],

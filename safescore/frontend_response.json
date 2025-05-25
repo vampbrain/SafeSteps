@@ -1,0 +1,141 @@
+{
+  "status": "success",
+  "timestamp": "2025-05-25T10:51:15.209640",
+  "analysis_summary": {
+    "total_routes": 3,
+    "recommended_route_index": 2,
+    "travel_hour": 14
+  },
+  "routes": [
+    {
+      "route_id": 2,
+      "name": "Bannerghatta Road",
+      "distance": "25.0 km",
+      "duration": "50 mins",
+      "safety": {
+        "risk_score": 2.998,
+        "risk_category": "HIGH",
+        "safety_score": 4.0,
+        "is_recommended": true
+      },
+      "coordinates": [
+        {
+          "lat": 12.97,
+          "lng": 77.59
+        },
+        {
+          "lat": 12.94,
+          "lng": 77.58
+        },
+        {
+          "lat": 12.91,
+          "lng": 77.6
+        },
+        {
+          "lat": 12.88,
+          "lng": 77.65
+        },
+        {
+          "lat": 12.89,
+          "lng": 77.67
+        }
+      ],
+      "style": {
+        "color": "#F44336",
+        "weight": 4,
+        "opacity": 0.6
+      }
+    },
+    {
+      "route_id": 0,
+      "name": "Hosur Road (Direct)",
+      "distance": "18.0 km",
+      "duration": "35 mins",
+      "safety": {
+        "risk_score": 3.062,
+        "risk_category": "HIGH",
+        "safety_score": 3.9,
+        "is_recommended": false
+      },
+      "coordinates": [
+        {
+          "lat": 12.97,
+          "lng": 77.59
+        },
+        {
+          "lat": 12.95,
+          "lng": 77.61
+        },
+        {
+          "lat": 12.93,
+          "lng": 77.63
+        },
+        {
+          "lat": 12.91,
+          "lng": 77.65
+        },
+        {
+          "lat": 12.89,
+          "lng": 77.67
+        }
+      ],
+      "style": {
+        "color": "#F44336",
+        "weight": 4,
+        "opacity": 0.6
+      }
+    },
+    {
+      "route_id": 1,
+      "name": "Outer Ring Road",
+      "distance": "22.0 km",
+      "duration": "42 mins",
+      "safety": {
+        "risk_score": 3.192,
+        "risk_category": "HIGH",
+        "safety_score": 3.6,
+        "is_recommended": false
+      },
+      "coordinates": [
+        {
+          "lat": 12.97,
+          "lng": 77.59
+        },
+        {
+          "lat": 12.99,
+          "lng": 77.62
+        },
+        {
+          "lat": 13.01,
+          "lng": 77.65
+        },
+        {
+          "lat": 12.95,
+          "lng": 77.68
+        },
+        {
+          "lat": 12.89,
+          "lng": 77.67
+        }
+      ],
+      "style": {
+        "color": "#F44336",
+        "weight": 4,
+        "opacity": 0.6
+      }
+    }
+  ],
+  "insights": {
+    "safest_route": {
+      "index": 2,
+      "summary": "Bannerghatta Road",
+      "risk_score": 2.998
+    },
+    "riskiest_route": {
+      "index": 1,
+      "summary": "Outer Ring Road",
+      "risk_score": 3.192
+    },
+    "risk_reduction_percentage": 6.1
+  }
+}
