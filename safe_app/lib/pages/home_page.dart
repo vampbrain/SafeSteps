@@ -6,6 +6,7 @@ import '../widgets/route_summary_dialog.dart';
 import '../widgets/json_data_dialog.dart';
 import '../widgets/ml_result_dialog.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../utils/constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +31,10 @@ class _HomePageState extends State<HomePage> {
     await _routeController.initializeLocation();
     if (_routeController.userLocation != null) {
       _startController.text = 'Current Location';
+    } else {
+      // Default to Electronic City if GPS not available
+      _routeController.startLocation = AppConstants.electronicCityCenter;
+      _startController.text = 'Electronic City, Bangalore';
     }
   }
 
@@ -43,6 +48,8 @@ class _HomePageState extends State<HomePage> {
       _showSnackBar(error);
     } else {
       _showSnackBar('${_routeController.allRoutesData.length} routes found');
+      Future.delayed(Duration(milliseconds: 500), () {
+      });
     }
   }
 
@@ -55,7 +62,10 @@ class _HomePageState extends State<HomePage> {
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+      ), 
     );
   }
 
@@ -120,6 +130,7 @@ class _HomePageState extends State<HomePage> {
                       _routeController.allRoutesData,
                       _routeController.mlSelectedRoute,
                     ),
+                    tooltip: 'View Routes Summary',
                   ),
                   IconButton(
                     icon: const Icon(Icons.code),
@@ -128,6 +139,7 @@ class _HomePageState extends State<HomePage> {
                       _routeController.allRoutesData,
                       _routeController.mlSelectedRoute,
                     ),
+                    tooltip: 'View JSON Data',
                   ),
                 ],
               );
