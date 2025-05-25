@@ -242,8 +242,7 @@ class _HomePageState extends State<HomePage> {
 
     return AppBar(
       title: const Text('SafeSteps'),
-      backgroundColor: const Color.fromRGBO(198, 142, 253, 1.0),
-      foregroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),foregroundColor: Colors.black,
       actions: [
         ListenableBuilder(
           listenable: _routeController,

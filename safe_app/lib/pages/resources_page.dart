@@ -55,6 +55,15 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
   }
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      throw 'Could not launch phone call';
+    }
+  }
+
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
@@ -81,35 +90,66 @@ class _ResourcesPageState extends State<ResourcesPage> {
         borderRadius: BorderRadius.circular(12),
         side: const BorderSide(color: Colors.black12),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        title: Text(
-          name,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text(
-              description,
-              style: const TextStyle(color: Colors.black54, fontSize: 14),
-            ),
-          ],
-        ),
-        trailing: TextButton(
-          onPressed: () => launchUrl(Uri.parse('tel:$number')),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: const BorderSide(color: Colors.black),
-            ),
-          ),
-          child: Text(
-            number,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      child: InkWell(
+        onTap: () => _makePhoneCall(number),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.red),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.phone,
+                      size: 16,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      number,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -200,25 +240,28 @@ class _ResourcesPageState extends State<ResourcesPage> {
           _buildSectionTitle('Emergency Contacts'),
           _buildEmergencyContact(
             'Emergency Services',
-            '911',
-            'For immediate emergency assistance',
-          ),
-          _buildEmergencyContact(
-            'National Emergency Hotline',
             '112',
-            'Alternative emergency number',
+            'National Emergency Number (Police, Fire, Medical)',
           ),
           _buildEmergencyContact(
             'Women\'s Helpline',
             '1091',
             'National helpline for women in distress',
           ),
-
+          _buildEmergencyContact(
+            'Police Control Room',
+            '100',
+            'Direct line to police control room',
+          ),
+          _buildEmergencyContact(
+            'Ambulance',
+            '108',
+            'Emergency medical services',
+          ),
           _buildSectionTitle('Safety Tutorial Videos'),
           _buildVideoResource('Basic Self-Defense Techniques for Women', 0),
           _buildVideoResource('Street Safety Tips & Awareness', 1),
           _buildVideoResource('How to Use Personal Safety Devices', 2),
-
           _buildSectionTitle('Useful Links'),
           _buildUsefulLink(
             'Personal Safety Guidelines',

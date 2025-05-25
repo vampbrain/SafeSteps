@@ -234,7 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               const Text(
                 'Emergency Contacts',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 onPressed: _showAddContactDialog,
