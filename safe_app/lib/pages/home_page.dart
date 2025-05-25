@@ -109,46 +109,54 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ADDED: Method to build AppBar conditionally
+  PreferredSizeWidget? _buildAppBar() {
+    // Only show AppBar for maps page (index 0)
+    if (_currentIndex != 0) return null;
+    
+    return AppBar(
+      title: const Text('SafeSteps'),
+      backgroundColor: const Color.fromRGBO(198, 142, 253, 1.0),
+      foregroundColor: Colors.black,
+      actions: [
+        ListenableBuilder(
+          listenable: _routeController,
+          builder: (context, child) {
+            if (_routeController.allRoutesData.isEmpty)
+              return const SizedBox();
+
+            return Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.list),
+                  onPressed: () => RouteSummaryDialog.show(
+                    context,
+                    _routeController.allRoutesData,
+                    _routeController.mlSelectedRoute,
+                  ),
+                  tooltip: 'View Routes Summary',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.code),
+                  onPressed: () => JsonDataDialog.show(
+                    context,
+                    _routeController.allRoutesData,
+                    _routeController.mlSelectedRoute,
+                  ),
+                  tooltip: 'View JSON Data',
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SafeSteps'),
-        backgroundColor: const Color.fromRGBO(198, 142, 253, 1.0),
-        foregroundColor: Colors.black,
-        actions: [
-          ListenableBuilder(
-            listenable: _routeController,
-            builder: (context, child) {
-              if (_routeController.allRoutesData.isEmpty)
-                return const SizedBox();
-
-              return Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.list),
-                    onPressed: () => RouteSummaryDialog.show(
-                      context,
-                      _routeController.allRoutesData,
-                      _routeController.mlSelectedRoute,
-                    ),
-                    tooltip: 'View Routes Summary',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.code),
-                    onPressed: () => JsonDataDialog.show(
-                      context,
-                      _routeController.allRoutesData,
-                      _routeController.mlSelectedRoute,
-                    ),
-                    tooltip: 'View JSON Data',
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(), // MODIFIED: Conditional AppBar
       body: _buildCurrentPage(),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
