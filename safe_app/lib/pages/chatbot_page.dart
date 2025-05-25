@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../controllers/chat_controller.dart';
 import '../models/chat_message.dart';
 
@@ -112,6 +113,9 @@ class _ChatbotPageState extends State<ChatbotPage> {
     return Align(
       alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.8,
+        ),
         margin: EdgeInsets.only(
           left: message.isUser ? 64 : 16,
           right: message.isUser ? 16 : 64,
@@ -125,14 +129,38 @@ class _ChatbotPageState extends State<ChatbotPage> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              message.text,
-              style: TextStyle(
-                color: message.isUser ? Colors.white : Colors.black87,
-                fontSize: 16,
+            if (message.isUser)
+              Text(
+                message.text,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
+              )
+            else
+              MarkdownBody(
+                data: message.text,
+                styleSheet: MarkdownStyleSheet(
+                  p: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                  strong: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  listBullet: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                  ),
+                  blockquote: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                shrinkWrap: true,
               ),
-            ),
             const SizedBox(height: 4),
             Text(
               '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
