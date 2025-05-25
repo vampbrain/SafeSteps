@@ -8,6 +8,7 @@ import '../widgets/ml_result_dialog.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../utils/constants.dart';
 import 'chatbot_page.dart';
+import '../pages/api_test_screen.dart'; // Adjust path as needed
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -137,12 +138,13 @@ class _HomePageState extends State<HomePage> {
                   tooltip: 'View Routes Summary',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.code),
-                  onPressed: () => JsonDataDialog.show(
-                    context,
-                    _routeController.allRoutesData,
-                    _routeController.mlSelectedRoute,
-                  ),
+                  icon: Icon(Icons.bug_report),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => APIConnectionTest()),
+                    );
+                  },
                   tooltip: 'View JSON Data',
                 ),
               ],
