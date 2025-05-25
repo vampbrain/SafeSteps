@@ -4,7 +4,7 @@ import '../models/route_model.dart';
 
 class MLService {
   // Updated to use your computer's IP address for physical device
-  static const String _baseUrl = 'http://192.168.6.15:5000';
+  static const String _baseUrl = 'http://192.168.8.83:5000';
   
   // Test connection method
   Future<bool> testConnection() async {
