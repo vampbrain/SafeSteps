@@ -35,6 +35,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _initializeApp();
     _requestLocationPermission();
+    _configureLocation();
+  }
+
+  Future<void> _configureLocation() async {
+    await _location.changeSettings(
+      accuracy: LocationAccuracy.high,
+      interval: 1000,
+      distanceFilter: 5,
+    );
   }
 
   Future<void> _requestLocationPermission() async {
@@ -98,63 +107,69 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-      // Get current location
+      // Get current location with high accuracy
       final LocationData? currentLocation = await _getCurrentLocation();
 
       // Hide loading indicator
-      Navigator.pop(context);
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
 
       final List<dynamic> contacts = json.decode(contactsJson);
       final List<String> recipients =
           contacts.map((contact) => contact['phone'] as String).toList();
 
+      // Create the base message
       String message =
-          'EMERGENCY: ${userName.isNotEmpty ? "$userName needs" : "I need"} help!';
+          'EMERGENCY: ${userName.isNotEmpty ? "$userName needs" : "Someone needs"} help!\n\n';
 
-      if (currentLocation != null) {
-        final locationUrl =
-            'https://www.google.com/maps/search/?api=1&query=${currentLocation.latitude},${currentLocation.longitude}';
-        message += '\nMy current location: $locationUrl';
-
-        // Add address if available
-        if (currentLocation.latitude != null &&
-            currentLocation.longitude != null) {
-          message +=
-              '\nLatitude: ${currentLocation.latitude}\nLongitude: ${currentLocation.longitude}';
-        }
+      if (currentLocation != null &&
+          currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        // Add location details
+        message += 'Current Location:\n';
+        message +=
+            'https://www.google.com/maps/search/?api=1&query=${currentLocation.latitude},${currentLocation.longitude}\n\n';
+        message += 'Coordinates:\n';
+        message += 'Latitude: ${currentLocation.latitude}\n';
+        message += 'Longitude: ${currentLocation.longitude}\n\n';
       } else {
-        message += '\nLocation not available';
+        message += 'Location information not available\n\n';
       }
 
-      // Add timestamp
-      message += '\nSent at: ${DateTime.now().toString()}';
+      // Add timestamp in a readable format
+      final now = DateTime.now();
+      message +=
+          'Sent on: ${now.day}/${now.month}/${now.year} at ${now.hour}:${now.minute}';
 
-      // Create SMS URI with all recipients
-      final Uri smsUri = Uri(
-        scheme: 'sms',
-        path: recipients.join(','),
-        queryParameters: {'body': message},
-      );
+      // Create direct SMS URI for each recipient
+      for (final recipient in recipients) {
+        final Uri smsUri =
+            Uri.parse('sms:$recipient?body=${Uri.encodeComponent(message)}');
 
-      if (await canLaunchUrl(smsUri)) {
-        await launchUrl(smsUri);
+        if (await canLaunchUrl(smsUri)) {
+          await launchUrl(smsUri);
+        }
+      }
+
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Opening SMS app with emergency message'),
             backgroundColor: Colors.green,
           ),
         );
-      } else {
-        throw 'Could not launch SMS';
       }
     } catch (e) {
       print('Error sending SOS messages: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to send emergency messages'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to send emergency messages'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -242,7 +257,8 @@ class _HomePageState extends State<HomePage> {
 
     return AppBar(
       title: const Text('SafeSteps'),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),foregroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      foregroundColor: Colors.black,
       actions: [
         ListenableBuilder(
           listenable: _routeController,
@@ -265,7 +281,8 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => APIConnectionTest()),
+                      MaterialPageRoute(
+                          builder: (context) => APIConnectionTest()),
                     );
                   },
                   tooltip: 'View JSON Data',
