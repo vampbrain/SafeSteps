@@ -64,8 +64,4 @@ class MapsService {
     }
     return [];
   }
-
-  bool isInChennai(LatLng point) {
-    return AppConstants.chennaiBounds.contains(point);
-  }
 }

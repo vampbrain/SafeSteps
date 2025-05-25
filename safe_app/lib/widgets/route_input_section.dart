@@ -56,6 +56,7 @@ class RouteInputSection extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: onMLProcess,
+                  // ignore: sort_child_properties_last
                   child: isProcessingML 
                       ? SizedBox(
                           height: 20,

@@ -51,13 +51,9 @@ class RouteController extends ChangeNotifier {
       return 'Could not find destination';
     }
 
-    // Check Chennai bounds
-    if (!_mapsService.isInChennai(start!) || !_mapsService.isInChennai(dest)) {
-      return 'Both locations must be within Chennai';
-    }
 
     // Fetch routes
-    final routes = await _mapsService.fetchRoutes(start, dest);
+    final routes = await _mapsService.fetchRoutes(start!, dest);
     if (routes.isEmpty) {
       return 'No routes found';
     }
@@ -111,6 +107,7 @@ class RouteController extends ChangeNotifier {
           markerId: const MarkerId('start'),
           position: startLocation!,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          infoWindow: InfoWindow(title: 'Start'),
         ),
       );
     }
@@ -121,6 +118,7 @@ class RouteController extends ChangeNotifier {
           markerId: const MarkerId('destination'),
           position: destination!,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: InfoWindow(title: 'Destination'),
         ),
       );
     }
@@ -137,6 +135,7 @@ class RouteController extends ChangeNotifier {
         ),
       );
     }
+    notifyListeners();
   }
 
   void updateMapWithMLSelection() {
@@ -155,18 +154,39 @@ class RouteController extends ChangeNotifier {
     }
   }
 
-  LatLngBounds? getRouteBounds() {
-    if (startLocation == null || destination == null) return null;
-
-    return LatLngBounds(
-      southwest: LatLng(
-        [startLocation!.latitude, destination!.latitude].reduce((a, b) => a < b ? a : b),
-        [startLocation!.longitude, destination!.longitude].reduce((a, b) => a < b ? a : b),
-      ),
-      northeast: LatLng(
-        [startLocation!.latitude, destination!.latitude].reduce((a, b) => a > b ? a : b),
-        [startLocation!.longitude, destination!.longitude].reduce((a, b) => a > b ? a : b),
-      ),
-    );
+  // Add method to calculate bounds for all routes
+LatLngBounds? getRouteBounds() {
+  if (allRoutesData.isEmpty || startLocation == null || destination == null) {
+    return null;
   }
+
+  double minLat = startLocation!.latitude;
+  double maxLat = startLocation!.latitude;
+  double minLng = startLocation!.longitude;
+  double maxLng = startLocation!.longitude;
+
+  // Include destination
+  minLat = minLat < destination!.latitude ? minLat : destination!.latitude;
+  maxLat = maxLat > destination!.latitude ? maxLat : destination!.latitude;
+  minLng = minLng < destination!.longitude ? minLng : destination!.longitude;
+  maxLng = maxLng > destination!.longitude ? maxLng : destination!.longitude;
+
+  // Include all route points for better bounds calculation
+  for (final route in allRoutesData) {
+    for (final point in route.polylinePoints) {
+      minLat = minLat < point.latitude ? minLat : point.latitude;
+      maxLat = maxLat > point.latitude ? maxLat : point.latitude;
+      minLng = minLng < point.longitude ? minLng : point.longitude;
+      maxLng = maxLng > point.longitude ? maxLng : point.longitude;
+    }
+  }
+
+  // Add padding to bounds
+  const double padding = 0.01;
+  return LatLngBounds(
+    southwest: LatLng(minLat - padding, minLng - padding),
+    northeast: LatLng(maxLat + padding, maxLng + padding),
+  );
+}
+
 }
