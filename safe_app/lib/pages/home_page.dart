@@ -6,10 +6,11 @@ import '../widgets/route_summary_dialog.dart';
 import '../widgets/json_data_dialog.dart';
 import '../widgets/ml_result_dialog.dart';
 import '../widgets/bottom_nav_bar.dart';
+import 'chatbot_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       _startController.text,
       _destinationController.text,
     );
-    
+
     if (error != null) {
       _showSnackBar(error);
     } else {
@@ -54,9 +55,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Widget _buildCurrentPage() {
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return _buildMapsPage();
       case 1:
-        return const Center(child: Text('Chatbot Coming Soon'));
+        return const ChatbotPage();
       case 2:
         return const Center(child: Text('Resources Coming Soon'));
       case 3:
@@ -84,16 +85,16 @@ class _HomePageState extends State<HomePage> {
               startController: _startController,
               destinationController: _destinationController,
               onSearchRoutes: _searchRoutes,
-              onMLProcess: _routeController.allRoutesData.isNotEmpty ? _processWithML : null,
+              onMLProcess: _routeController.allRoutesData.isNotEmpty
+                  ? _processWithML
+                  : null,
               isProcessingML: _routeController.isProcessingML,
               routeCount: _routeController.allRoutesData.length,
               hasMLSelection: _routeController.mlSelectedRoute != null,
             );
           },
         ),
-        Expanded(
-          child: MapWidget(controller: _routeController),
-        ),
+        Expanded(child: MapWidget(controller: _routeController)),
       ],
     );
   }
@@ -109,8 +110,9 @@ class _HomePageState extends State<HomePage> {
           ListenableBuilder(
             listenable: _routeController,
             builder: (context, child) {
-              if (_routeController.allRoutesData.isEmpty) return const SizedBox();
-              
+              if (_routeController.allRoutesData.isEmpty)
+                return const SizedBox();
+
               return Row(
                 children: [
                   IconButton(
