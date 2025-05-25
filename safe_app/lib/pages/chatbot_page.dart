@@ -73,7 +73,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
   Widget _buildSuggestions() {
     return Container(
-      height: 100,
+      height: 60,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -92,27 +92,13 @@ class _ChatbotPageState extends State<ChatbotPage> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer.withOpacity(0.7),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withOpacity(0.2),
-                  ),
+                  border: Border.all(color: Colors.black12),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      suggestion['label']!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  suggestion['label']!,
+                  style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
               ),
             ),
@@ -134,9 +120,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: message.isUser
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.9)
-              : Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+          color: message.isUser ? Colors.black : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -153,9 +137,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
             Text(
               '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
               style: TextStyle(
-                color: message.isUser
-                    ? Colors.white.withOpacity(0.7)
-                    : Colors.black54,
+                color: message.isUser ? Colors.white70 : Colors.black54,
                 fontSize: 12,
               ),
             ),
@@ -169,7 +151,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SafeSteps Assistant'),
+        title: const Text('Safe Steps Assistant'),
         actions: [
           IconButton(
             icon: const Icon(Icons.bug_report),
@@ -185,7 +167,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
                     ),
                     backgroundColor: response?.startsWith('Error:') ?? false
                         ? Colors.red
-                        : Colors.green,
+                        : Colors.black,
                   ),
                 );
               } catch (e) {
@@ -229,7 +211,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -249,10 +231,18 @@ class _ChatbotPageState extends State<ChatbotPage> {
                         hintText: 'Type your message...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide.none,
+                          borderSide: const BorderSide(color: Colors.black12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: const BorderSide(color: Colors.black12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: const BorderSide(color: Colors.black),
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.surface,
+                        fillColor: Colors.white,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 10,
@@ -272,7 +262,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
                         onPressed: _chatController.isLoading
                             ? null
                             : () => _sendMessage(),
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Colors.black,
                         child: _chatController.isLoading
                             ? const SizedBox(
                                 width: 24,
